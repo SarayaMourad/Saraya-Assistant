@@ -1,0 +1,335 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("OWNER")
+  createdAt    DateTime @default(now())
+}
+
+model Shop {
+  id         String   @id @default(cuid())
+  name       String   @default("Saraya")
+  openaiKey  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  workers    Worker[]
+  products   Product[]
+  prices     PriceHistory[]
+  shifts     Shift[]
+}
+
+model Worker {
+  id        String   @id @default(cuid())
+  shopId    String
+  name      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shifts    Shift[]
+
+  @@unique([shopId, name])
+  @@index([shopId, active])
+}
+
+// Physical inventory. Existing Saraya stock continues to use this table.
+model Item {
+  id           String          @id @default(cuid())
+  name         String
+  unit         String
+  quantity     Float           @default(0)
+  archivedAt   DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  movements    StockMovement[]
+  shiftItems   ShiftItem[]
+  stockLines   ShiftStockLine[]
+  rules        ProductConsumptionRule[]
+  corrections ShiftCorrection[]
+
+  @@index([name])
+}
+
+// Complete ledger: current quantity is on Item; this preserves why it changed.
+model StockMovement {
+  id             String   @id @default(cuid())
+  itemId         String
+  shiftId        String?
+  item           Item     @relation(fields: [itemId], references: [id])
+  shift          Shift?   @relation(fields: [shiftId], references: [id], onDelete: SetNull)
+  type           String
+  quantity       Float
+  quantityBefore Float?
+  quantityAfter  Float?
+  source         String
+  note           String?
+  createdAt      DateTime @default(now())
+
+  @@index([itemId, createdAt])
+  @@index([shiftId])
+}
+
+// POS/caisse catalogue. Every ticket line can point to one Product.
+model Product {
+  id             String   @id @default(cuid())
+  shopId         String
+  posName        String
+  normalizedName String
+  category       String
+  isActive       Boolean  @default(true)
+  isStockTracked Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  shop           Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  saleLines      ShiftSaleLine[]
+  rules          ProductConsumptionRule[]
+  prices         PriceHistory[]
+
+  @@unique([shopId, posName])
+  @@index([shopId, category, isActive])
+  @@index([normalizedName])
+}
+
+// Connects a sold POS product to stock/analytics behavior (coffee, chicha, Kamia, citron...).
+model ProductConsumptionRule {
+  id                  String   @id @default(cuid())
+  productId           String
+  itemId              String?
+  ruleCode             String
+  expectedQtyPerSale   Float?
+  unit                 String?
+  includeInNormalCount Boolean  @default(true)
+  metadata             Json?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  product              Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  item                 Item?    @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@unique([productId, ruleCode])
+  @@index([ruleCode])
+  @@index([itemId])
+}
+
+// Historical price/configuration. Old shifts keep priceUsed in ShiftCorrection too.
+model PriceHistory {
+  id        String    @id @default(cuid())
+  shopId    String
+  productId String?
+  priceCode String
+  price     Decimal   @db.Decimal(12, 3)
+  currency  String    @default("TND")
+  validFrom DateTime  @default(now())
+  validTo   DateTime?
+  createdAt DateTime  @default(now())
+  shop      Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([shopId, priceCode, validFrom])
+  @@index([productId])
+}
+
+// One validated /recette session.
+model Shift {
+  id                       String      @id @default(cuid())
+  shopId                   String?
+  workerId                 String?
+  shiftType                String
+  businessDate             DateTime?
+  startedAt                DateTime?
+  cashExpected             Float
+  cashCounted              Float
+  cashVariance             Float
+  cashCaisse               Decimal?    @db.Decimal(12, 3)
+  ramiGames                Decimal?    @db.Decimal(12, 3)
+  ramiMultiplier           Decimal?    @db.Decimal(8, 3)
+  ramiValue                Decimal?    @db.Decimal(12, 3)
+  ticketTotal              Decimal?    @db.Decimal(12, 3)
+  expenseTotal             Decimal?    @db.Decimal(12, 3)
+  staffSalary              Decimal?    @db.Decimal(12, 3)
+  automaticCorrectionTotal Decimal?    @db.Decimal(12, 3)
+  acceptedCorrectionTotal  Decimal?    @db.Decimal(12, 3)
+  recetteBeforeCorrection  Decimal?    @db.Decimal(12, 3)
+  recetteFinale            Decimal?    @db.Decimal(12, 3)
+  totalItemsSold           Float?
+  totalTransactions        Int?
+  status                   String      @default("RECORDED")
+  dataConfirmedAt          DateTime?
+  correctionsConfirmedAt   DateTime?
+  recordedAt               DateTime?
+  closedAt                 DateTime    @default(now())
+  notes                    String?
+  sourceFingerprint        String?     @unique
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+
+  shop        Shop?              @relation(fields: [shopId], references: [id], onDelete: SetNull)
+  worker      Worker?            @relation(fields: [workerId], references: [id], onDelete: SetNull)
+  items       ShiftItem[]
+  stockLines  ShiftStockLine[]
+  saleLines   ShiftSaleLine[]
+  corrections ShiftCorrection[]
+  metrics     ShiftMetric[]
+  expenses    ShiftExpense[]
+  extractions ShiftExtraction[]
+  auditEvents ShiftAuditEvent[]
+  movements   StockMovement[]
+
+  @@index([shopId, businessDate])
+  @@index([workerId, businessDate])
+  @@index([status, closedAt])
+}
+
+// Kept for compatibility with the existing shift-close code.
+model ShiftItem {
+  id          String  @id @default(cuid())
+  shiftId     String
+  itemId      String
+  consumedQty Float
+  shift       Shift   @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  item        Item    @relation(fields: [itemId], references: [id])
+
+  @@unique([shiftId, itemId])
+}
+
+// Exact stock-paper values: START + AJOUT - FIN = consumedQty.
+model ShiftStockLine {
+  id                    String   @id @default(cuid())
+  shiftId               String
+  itemId                String?
+  rawItemName            String
+  normalizedItemName     String?
+  unit                   String?
+  startQty               Float?
+  addedQty               Float?
+  endQty                 Float?
+  consumedQty            Float?
+  aiStartQty              Float?
+  aiAddedQty              Float?
+  aiEndQty                Float?
+  extractionConfidence   Float?
+  wasOwnerModified       Boolean  @default(false)
+  originalExtractedValue Json?
+  createdAt              DateTime @default(now())
+  shift                  Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  item                   Item?    @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([shiftId])
+  @@index([itemId])
+}
+
+// Every POS ticket line, including lines not currently used in corrections.
+model ShiftSaleLine {
+  id                    String   @id @default(cuid())
+  shiftId               String
+  productId             String?
+  category              String
+  rawProductName        String
+  normalizedProductName String?
+  quantity              Float
+  ratio                 Float?
+  unitPrice             Decimal? @db.Decimal(12, 3)
+  lineTotal             Decimal? @db.Decimal(12, 3)
+  extractionConfidence  Float?
+  wasOwnerModified      Boolean  @default(false)
+  originalExtractedValue Json?
+  createdAt             DateTime @default(now())
+  shift                 Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  product               Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([shiftId, category])
+  @@index([productId])
+  @@index([normalizedProductName])
+}
+
+// Automatic discrepancy AND the owner's final business decision are both preserved.
+model ShiftCorrection {
+  id                 String   @id @default(cuid())
+  shiftId            String
+  itemId             String?
+  correctionCode     String
+  expectedQty        Float?
+  actualConsumedQty  Float?
+  differenceQty      Float?
+  calculationRule    String
+  priceUsed          Decimal? @db.Decimal(12, 3)
+  automaticAmount    Decimal  @db.Decimal(12, 3)
+  acceptedAmount     Decimal  @db.Decimal(12, 3)
+  decision           String
+  ownerReason        String?
+  ownerModifiedAt    DateTime?
+  createdAt          DateTime @default(now())
+  shift              Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  item               Item?    @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([shiftId])
+  @@index([correctionCode])
+  @@index([decision])
+}
+
+// Flexible analytics: coffee/beans, chicha/tombac, totals, ratios, future KPIs.
+model ShiftMetric {
+  id         String   @id @default(cuid())
+  shiftId    String
+  metricCode String
+  value      Decimal  @db.Decimal(18, 6)
+  unit       String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  shift      Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@unique([shiftId, metricCode])
+  @@index([metricCode])
+}
+
+model ShiftExpense {
+  id          String   @id @default(cuid())
+  shiftId     String
+  type        String   @default("OTHER")
+  description String?
+  amount      Decimal  @db.Decimal(12, 3)
+  createdAt   DateTime @default(now())
+  shift       Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@index([shiftId])
+}
+
+// Keeps AI extraction and the owner-validated version for traceability.
+model ShiftExtraction {
+  id            String    @id @default(cuid())
+  shiftId       String
+  sourceType    String
+  extractedJson Json
+  validatedJson Json?
+  aiModel       String?
+  sourceHash    String?
+  createdAt     DateTime  @default(now())
+  validatedAt   DateTime?
+  shift         Shift     @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@index([shiftId, sourceType])
+  @@index([sourceHash])
+}
+
+// Important business events only; not every casual chat message.
+model ShiftAuditEvent {
+  id        String   @id @default(cuid())
+  shiftId   String
+  eventType String
+  payload   Json?
+  createdAt DateTime @default(now())
+  shift     Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@index([shiftId, createdAt])
+  @@index([eventType])
+}

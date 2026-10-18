@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{--bg:#f5f5f7;--surface:#fff;--surface2:#fbfbfd;--primary:#147a4b;--primary-soft:#eaf5ef;--text:#1d1d1f;--secondary:#6e6e73;--border:#e5e5e7;--error:#d70015;--warning:#9a6700;--radius:20px}
+*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed}input,select,textarea{outline:none}input:focus,select:focus,textarea:focus{border-color:#8ab8a0;box-shadow:0 0 0 4px rgba(20,122,75,.09)}
+.app-shell{min-height:100dvh;width:100%;max-width:720px;margin:0 auto;background:rgba(255,255,255,.78);box-shadow:0 0 0 1px rgba(0,0,0,.025),0 20px 80px rgba(0,0,0,.05)}.fade-in{animation:fade-in .22s ease-out}@keyframes fade-in{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:none}}.safe-bottom{padding-bottom:88px}.composer{background:linear-gradient(to bottom,rgba(245,245,247,0),rgba(245,245,247,.96) 22%,rgba(245,245,247,.98));backdrop-filter:blur(18px)}
+.message-user{border-radius:20px 20px 6px 20px;background:#eaf4ee;padding:10px 14px;font-size:15px;line-height:1.55}.message-assistant{max-width:620px;font-size:15px;line-height:1.62}.readable-text{display:grid;gap:10px}.readable-text p{margin:0;white-space:pre-wrap}.recette-card{width:min(100%,640px);overflow:hidden;border:1px solid var(--border);border-radius:24px;background:white;box-shadow:0 10px 35px rgba(0,0,0,.055)}.recette-head{display:flex;align-items:flex-start;justify-content:space-between;padding:22px 22px 14px}.recette-head h3{margin:4px 0 0;font-size:22px;line-height:1.15;letter-spacing:-.4px}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:700;color:var(--secondary)}.status-pill{border-radius:999px;background:#f2f2f4;padding:6px 9px;font-size:11px;font-weight:650;color:var(--secondary)}.status-pill.done{background:var(--primary-soft);color:var(--primary)}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:0 18px 18px}.step{display:flex;min-width:0;flex-direction:column;align-items:center;gap:5px;color:#b0b0b5}.step span{display:grid;width:24px;height:24px;place-items:center;border-radius:50%;background:#f2f2f4;font-size:10px;font-weight:700}.step small{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.step.active{color:var(--primary)}.step.active span{background:var(--primary-soft)}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--border);border-block:1px solid var(--border)}.metric{min-width:0;background:white;padding:15px 18px}.metric span{display:block;font-size:11px;color:var(--secondary);margin-bottom:4px}.metric strong{font-size:17px;letter-spacing:-.2px}.metric small{display:block;margin-top:3px;color:var(--secondary);font-size:10px}.section-title{display:flex;align-items:end;justify-content:space-between;padding:22px 20px 10px}.section-title h4{margin:0;font-size:14px}.section-title span{font-size:11px;color:var(--secondary)}.table-wrap{overflow-x:auto;border-top:1px solid var(--border)}.data-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.data-table th{padding:9px 14px;text-align:right;background:#fafafa;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--secondary);font-weight:650}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table td{padding:12px 14px;border-top:1px solid #efeff1;text-align:right;font-size:12px;white-space:nowrap}.data-table td b{display:block;font-weight:600}.data-table td small{display:block;margin-top:2px;color:var(--secondary);font-size:9px}.data-table tr.quiet{color:#8e8e93;background:#fcfcfc}.hero-total,.final-total{display:flex;align-items:end;justify-content:space-between;padding:20px 22px;border-top:1px solid var(--border);background:linear-gradient(135deg,#f7fbf9,#fff)}.hero-total span,.final-total span{font-size:12px;color:var(--secondary)}.hero-total strong{font-size:22px;color:var(--primary)}.final-total{padding:24px 22px}.final-total strong{font-size:30px;letter-spacing:-1px;color:var(--primary)}.insight-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);background:var(--border);gap:1px}.ledger{padding:8px 20px 16px}.ledger-row{display:flex;justify-content:space-between;gap:20px;padding:10px 2px;border-bottom:1px solid #efeff1;font-size:13px}.ledger-row.muted{margin-top:8px;border:0;color:var(--secondary)}.success-panel{display:grid;gap:5px;margin:0 18px 18px;padding:15px;border-radius:16px;background:var(--primary-soft);color:#205f3f}.success-panel span{font-size:12px;line-height:1.5}.success-panel small{color:#56816b}.recette-note{padding:16px 20px;border-top:1px solid var(--border);background:#fbfbfc;color:var(--secondary);font-size:12px;line-height:1.55}.recette-note .readable-text{gap:7px}
+@media(max-width:560px){.app-shell{max-width:none;box-shadow:none}.recette-card{border-radius:20px}.step small{display:none}.metric-grid{grid-template-columns:repeat(2,1fr)}.data-table th,.data-table td{padding-inline:11px}.final-total strong{font-size:26px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Saraya Premium UI v3 — calm, spacious, business-first */
+:root{--bg:#f2f3f5;--surface:#fff;--surface2:#f8f8fa;--primary:#176b47;--primary-hover:#125a3b;--primary-soft:#e9f4ee;--text:#171719;--secondary:#727277;--border:#e3e4e7;--hairline:rgba(0,0,0,.065);--shadow:0 18px 55px rgba(24,24,27,.07);--shadow-soft:0 8px 28px rgba(24,24,27,.055)}
+body{background:radial-gradient(circle at 50% -20%,#fff 0,#f4f5f6 38%,#eef0f2 100%);letter-spacing:-.01em}
+.premium-shell{display:flex;min-height:100dvh;width:min(1180px,100%);margin:0 auto;padding:18px;gap:16px}
+.desktop-sidebar{position:sticky;top:18px;display:flex;width:236px;height:calc(100dvh - 36px);flex:0 0 236px;flex-direction:column;border:1px solid var(--hairline);border-radius:26px;background:rgba(255,255,255,.82);padding:18px 14px;box-shadow:var(--shadow-soft);backdrop-filter:blur(24px)}
+.brand-lockup{display:flex;align-items:center;gap:11px;padding:5px 8px 20px}.brand-mark{display:grid;width:38px;height:38px;place-items:center;border-radius:12px;background:var(--primary);color:#fff;box-shadow:0 8px 20px rgba(23,107,71,.18)}.brand-lockup b{display:block;font-size:16px;letter-spacing:-.3px}.brand-lockup small{display:block;margin-top:1px;color:var(--secondary);font-size:11px}.side-nav{display:grid;gap:5px}.side-link{display:flex;align-items:center;gap:11px;height:46px;padding:0 13px;border-radius:13px;color:#66666b;font-size:14px;font-weight:550;transition:.18s ease}.side-link:hover{background:#f5f5f6;color:var(--text)}.side-link.active{background:var(--primary-soft);color:var(--primary);font-weight:650}.sidebar-foot{margin-top:auto;padding:13px 10px 5px;color:var(--secondary);font-size:11px}.status-dot{display:inline-block;width:7px;height:7px;margin-right:6px;border-radius:99px;background:#2f9d68;box-shadow:0 0 0 4px rgba(47,157,104,.1)}
+.app-shell{position:relative;min-height:calc(100dvh - 36px);width:100%;max-width:760px;margin:0;border:1px solid var(--hairline);border-radius:26px;background:rgba(255,255,255,.88);overflow:hidden;box-shadow:var(--shadow);backdrop-filter:blur(24px)}
+.app-shell header{background:rgba(255,255,255,.82)!important}.safe-bottom{padding-bottom:24px}.mobile-bottom-nav{display:none}.chat-composer{left:calc(50% + 126px);max-width:760px;transform:translateX(-50%)}
+.message-assistant{max-width:650px;font-size:15px;line-height:1.68;color:#2b2b2e}.message-user{background:#e8f2ec;box-shadow:inset 0 0 0 1px rgba(23,107,71,.05)}.readable-text{gap:12px}.recette-card{width:min(100%,680px);border-color:var(--hairline);border-radius:22px;box-shadow:0 12px 40px rgba(24,24,27,.07)}.recette-head{padding:24px 24px 16px}.recette-head h3{font-size:24px}.stepper{padding:0 20px 20px}.metric{padding:17px 20px}.metric strong{font-size:18px}.data-table th{padding:10px 16px;background:#f7f7f8}.data-table td{padding:14px 16px}.hero-total,.final-total{padding-inline:24px}.recette-note{padding:15px 22px;background:#fafafb}.recette-actions{display:flex;justify-content:flex-end;gap:10px;padding:14px 18px 18px;border-top:1px solid var(--border);background:#fff}.premium-button{min-height:42px;border-radius:12px;padding:0 17px;font-size:13px;font-weight:650;transition:.16s ease}.premium-button:disabled{opacity:.45}.premium-button.primary{border:1px solid var(--primary);background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(23,107,71,.14)}.premium-button.primary:hover{background:var(--primary-hover)}.premium-button.secondary{border:1px solid var(--border);background:#fff;color:var(--text)}.premium-button.secondary:hover{background:#f6f6f7}
+button{transition:transform .12s ease,background-color .16s ease,border-color .16s ease,box-shadow .16s ease}button:active:not(:disabled){transform:scale(.985)}input,select,textarea{transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+
+@media(max-width:900px){.premium-shell{display:block;padding:0}.desktop-sidebar{display:none}.app-shell{min-height:100dvh;max-width:760px;margin:0 auto;border:0;border-radius:0;box-shadow:none}.mobile-bottom-nav{display:block}.safe-bottom{padding-bottom:88px}.chat-composer{left:50%;max-width:760px}.composer{padding-bottom:76px}}
+@media(max-width:560px){.recette-actions{position:sticky;bottom:0;display:grid;grid-template-columns:1fr;padding:12px}.recette-actions .premium-button{width:100%}.recette-head{padding:20px 18px 14px}.metric{padding:14px 15px}.premium-shell{background:#fff}}
+.premium-list-card,.premium-settings-card{overflow:hidden;border:1px solid var(--hairline);border-radius:18px;background:#fff;padding:0 16px;box-shadow:0 7px 24px rgba(24,24,27,.035)}
+.premium-list-card button:last-child,.premium-settings-card>*:last-child{border-bottom:0!important}
+
+/* =========================================================
+   Saraya Premium Mobile v4
+   Mobile-first visual system: native-app rhythm, safe areas,
+   floating navigation, readable chat and touch-friendly sheets.
+   ========================================================= */
+@media (max-width:900px){
+  html{background:#f4f5f7}
+  body{background:#f4f5f7;overscroll-behavior-y:none}
+  .premium-shell{min-height:100dvh;background:#f4f5f7}
+  .app-shell{width:100%;max-width:none;background:#f7f8f9;overflow:visible}
+  .app-shell main{min-height:100dvh}
+  .app-shell header{position:sticky;top:0;z-index:25;border-bottom:1px solid rgba(0,0,0,.055)!important;background:rgba(248,249,250,.82)!important;backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%)}
+  .safe-bottom{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+
+  .mobile-bottom-nav{display:block;position:fixed!important;left:14px!important;right:14px!important;bottom:calc(10px + env(safe-area-inset-bottom));width:auto!important;height:68px!important;max-width:none!important;transform:none!important;border:1px solid rgba(0,0,0,.07)!important;border-radius:22px;background:rgba(255,255,255,.88)!important;box-shadow:0 14px 40px rgba(20,24,28,.14),0 2px 8px rgba(20,24,28,.06);overflow:hidden;backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%)}
+  .mobile-bottom-nav>div{padding:5px}
+  .mobile-bottom-nav a{position:relative;border-radius:17px;transition:background .18s ease,color .18s ease,transform .12s ease}
+  .mobile-bottom-nav a:active{transform:scale(.96)}
+  .mobile-bottom-nav a.text-saraya-primary{background:var(--primary-soft)}
+  .mobile-bottom-nav svg{width:21px;height:21px}
+
+  .chat-composer{left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;transform:none!important;padding:12px 14px calc(96px + env(safe-area-inset-bottom))!important;background:linear-gradient(to bottom,rgba(247,248,249,0),rgba(247,248,249,.95) 20%,#f7f8f9 45%)!important}
+  .chat-composer>div:last-child{gap:8px;padding:7px;border:1px solid rgba(0,0,0,.07);border-radius:24px;background:rgba(255,255,255,.96);box-shadow:0 8px 28px rgba(20,24,28,.09)}
+  .chat-composer input[type="text"]{height:46px!important;border:0!important;border-radius:17px!important;background:#f3f4f5!important;box-shadow:none!important;padding-inline:14px!important}
+  .chat-composer button{box-shadow:none}
+
+  .message-assistant{max-width:100%;font-size:15px;line-height:1.66}
+  .message-user{border-radius:20px 20px 6px 20px;padding:11px 14px;background:#e4f1e9;box-shadow:none}
+  .readable-text{gap:11px}
+
+  .premium-list-card,.premium-settings-card{border:1px solid rgba(0,0,0,.055);border-radius:20px;box-shadow:0 7px 24px rgba(20,24,28,.04)}
+  .premium-list-card button,.premium-settings-card button{min-height:58px}
+
+  .recette-card{width:100%;border-radius:22px;border:1px solid rgba(0,0,0,.06);box-shadow:0 8px 30px rgba(20,24,28,.065)}
+  .recette-head{padding:20px 18px 14px}
+  .recette-head h3{font-size:22px}
+  .stepper{gap:3px;padding:0 14px 16px}
+  .step span{width:28px;height:28px;font-size:11px}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .metric{padding:15px}
+  .metric span{font-size:11px}.metric strong{font-size:17px}
+  .section-title{padding:20px 16px 10px}
+  .table-wrap{margin:0;scrollbar-width:none}.table-wrap::-webkit-scrollbar{display:none}
+  .data-table{min-width:520px}
+  .data-table th,.data-table td{padding:12px 13px}
+  .hero-total,.final-total{padding:19px 17px}
+  .final-total strong{font-size:27px}
+  .insight-grid{grid-template-columns:1fr 1fr}
+  .ledger{padding-inline:16px}
+  .recette-note{padding:14px 16px}
+  .recette-actions{position:sticky;bottom:calc(88px + env(safe-area-inset-bottom));z-index:8;display:grid;grid-template-columns:1fr;gap:8px;padding:11px;border-top:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.94);backdrop-filter:blur(18px)}
+  .recette-actions .premium-button{width:100%;min-height:48px;border-radius:14px}
+
+  /* Existing bottom sheets become comfortable mobile sheets */
+  .fixed.inset-0.z-50.flex.items-end{padding-top:72px;background:rgba(17,17,19,.34);backdrop-filter:blur(4px)}
+  .fixed.inset-0.z-50.flex.items-end>div{max-height:calc(100dvh - 72px);overflow-y:auto;border-radius:26px 26px 0 0!important;padding:22px 20px calc(22px + env(safe-area-inset-bottom))!important;box-shadow:0 -16px 50px rgba(0,0,0,.13)}
+  .fixed.inset-0.z-50.flex.items-end>div:before{content:"";display:block;width:38px;height:5px;margin:-10px auto 16px;border-radius:99px;background:#d4d4d8}
+}
+
+@media (max-width:560px){
+  body{font-size:15px}
+  .app-shell{background:#f7f8f9}
+  .app-shell header{padding-left:18px!important;padding-right:18px!important}
+  .app-shell section{padding-left:16px!important;padding-right:16px!important}
+  .app-shell main>div:not(.composer):not(.fixed){scrollbar-width:none}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .insight-grid{grid-template-columns:1fr}
+}
+
+@media (max-width:380px){
+  .mobile-bottom-nav{left:9px!important;right:9px!important}
+  .chat-composer{padding-left:9px!important;padding-right:9px!important}
+  .metric-grid{grid-template-columns:1fr}
+}
+
+
+/* V5 mobile navigation: intentionally kept away from hosting badges/drawers. */
+@media(max-width:900px){
+  .app-shell{padding-top:78px}
+  .mobile-bottom-nav{display:block;position:fixed!important;z-index:60;top:calc(10px + env(safe-area-inset-top));bottom:auto!important;left:50%!important;right:auto!important;width:min(94vw,430px)!important;height:58px!important;transform:translateX(-50%)!important;border:1px solid rgba(0,0,0,.075)!important;border-radius:19px;background:rgba(255,255,255,.94)!important;box-shadow:0 10px 32px rgba(20,24,28,.12);overflow:hidden;backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%)}
+  .mobile-bottom-nav>div{padding:4px 6px}
+  .mobile-nav-link{border-radius:14px!important;gap:2px!important;font-size:10px!important}
+  .mobile-nav-link.text-saraya-primary{background:var(--primary-soft)}
+  .mobile-nav-link svg{width:19px!important;height:19px!important}
+  .safe-bottom{padding-bottom:18px}
+  .assistant-header{top:0!important}
+  .composer{padding-bottom:0!important}
+  .chat-composer{padding-bottom:calc(14px + env(safe-area-inset-bottom))!important}
+}
+@media(max-width:380px){
+  .mobile-bottom-nav{width:calc(100vw - 16px)!important;top:calc(7px + env(safe-area-inset-top))}
+  .app-shell{padding-top:72px}
+}

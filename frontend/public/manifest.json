@@ -1,0 +1,10 @@
+{
+  "name": "Saraya Assistant",
+  "short_name": "Saraya",
+  "description": "Assistant privé pour le café Saraya",
+  "start_url": "/stock",
+  "display": "standalone",
+  "background_color": "#F7FBF8",
+  "theme_color": "#1B7F4B",
+  "lang": "fr"
+}
